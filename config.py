@@ -10,13 +10,24 @@ class BaseConfig:
     UPLOAD_FOLDER = os.getenv('UPLOAD_FOLDER', 'static/images/uploads')
     ALLOWED_IMAGE_EXTENSIONS = {'png', 'jpg', 'jpeg', 'gif', 'webp'}
     ALLOWED_VIDEO_EXTENSIONS = {'mp4', 'webm', 'ogg'}
-    FESTIVAL_DATE = os.getenv('FESTIVAL_DATE', '2025-08-27 06:00:00')
-    SQLALCHEMY_DATABASE_URI = (
-        f"mysql+pymysql://"
-        f"{os.getenv('DB_USER', 'root')}:{os.getenv('DB_PASSWORD', '')}"
-        f"@{os.getenv('DB_HOST', 'localhost')}:{os.getenv('DB_PORT', '3306')}"
-        f"/{os.getenv('DB_NAME', 'vinayaka_chavithi_db')}?charset=utf8mb4"
-    )
+    FESTIVAL_DATE = os.getenv('FESTIVAL_DATE', '2026-08-17 06:00:00')
+
+    @staticmethod
+    def get_database_uri():
+        # Render PostgreSQL (DATABASE_URL) ఉంటే అది వాడు
+        database_url = os.getenv('DATABASE_URL', '')
+        if database_url:
+            # Render postgres:// గా ఇస్తుంది — postgresql:// గా మార్చాలి
+            return database_url.replace('postgres://', 'postgresql://', 1)
+        # Local development లో MySQL వాడు
+        return (
+            f"mysql+pymysql://"
+            f"{os.getenv('DB_USER', 'root')}:{os.getenv('DB_PASSWORD', '')}"
+            f"@{os.getenv('DB_HOST', 'localhost')}:{os.getenv('DB_PORT', '3306')}"
+            f"/{os.getenv('DB_NAME', 'vinayaka_chavithi_db')}?charset=utf8mb4"
+        )
+
+    SQLALCHEMY_DATABASE_URI = get_database_uri.__func__()
 
 
 class DevelopmentConfig(BaseConfig):
