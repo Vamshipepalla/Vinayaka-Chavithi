@@ -8,7 +8,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link href="https://fonts.googleapis.com/css2?family=Cinzel+Decorative:wght@400;700;900&family=Crimson+Pro:ital,wght@0,300;0,400;0,600;1,400&family=Poppins:wght@300;400;500;600&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
-  <link rel="icon" type="image/x-icon" href="{{ url_for('static', filename='images/favicon.ico') }}">
+  <link rel="icon" type="image/jpeg" href="{{ url_for('static', filename='logo.jpeg') }}">
   <style>
     :root {
       --saffron:       #FF6B00;
@@ -120,7 +120,7 @@
 
 <nav class="navbar">
   <a href="{{ url_for('public_bp.index') }}" class="nav-brand">
-    <img src="{{ url_for('static', filename='images/logo.jpeg') }}" alt="Logo" style="width:45px; height:45px; border-radius:50%; object-fit:cover;">
+    <img src="{{ url_for('static', filename='logo.jpeg') }}" alt="Logo" style="width:45px; height:45px; border-radius:50%; object-fit:cover;">
     <span class="brand-text">
       Vinayaka Chavithi
       <small>Celebrations {{ settings.festival_year }}</small>
@@ -159,7 +159,7 @@
 <footer>
   <div class="footer-grid">
     <div class="footer-brand">
-      <img src="{{ url_for('static', filename='images/logo.jpeg') }}" alt="Logo" style="width:180px; height:180px; border-radius:50%; object-fit:cover;">
+      <h3>🐘 Vinayaka Chavithi Celebrations</h3>
       <p>Celebrating the divine blessings of Lord Ganesha with joy, devotion, and community spirit. May Ganapati bless us all with wisdom and prosperity.</p>
       <div class="social-links">
         {% if settings.facebook_url %}<a href="{{ settings.facebook_url }}" target="_blank"><i class="fab fa-facebook-f"></i></a>{% endif %}
