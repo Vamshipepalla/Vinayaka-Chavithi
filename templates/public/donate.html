@@ -1,0 +1,159 @@
+{% extends "public/base.html" %}
+{% block title %}Donate — {{ settings.site_title }}{% endblock %}
+{% block extra_styles %}
+.page-hero { background:linear-gradient(160deg,#1A0A00,#3D1A00); padding:80px 5% 60px; text-align:center; color:#fff; }
+.page-hero h1 { font-family:'Cinzel Decorative',serif; font-size:clamp(1.5rem,4vw,2.8rem); color:var(--gold-light); margin-bottom:10px; }
+.page-hero p { color:rgba(255,255,255,.75); font-size:1.05rem; }
+.donate-grid { display:grid; grid-template-columns:1fr 1fr; gap:32px; max-width:1000px; margin:auto; }
+.donate-card { background:#fff; border-radius:var(--radius); padding:32px; box-shadow:0 4px 24px var(--shadow); border-top:4px solid var(--saffron); text-align:center; }
+.donate-card h3 { font-family:'Cinzel Decorative',serif; font-size:1.1rem; color:var(--deep-red); margin-bottom:20px; }
+.qr-image { width:200px; height:200px; object-fit:contain; border:3px solid var(--saffron-pale); border-radius:12px; padding:8px; margin:0 auto 16px; display:block; }
+.upi-id-box { background:var(--saffron-pale); border:2px dashed var(--saffron); border-radius:10px; padding:14px 20px; font-family:'Poppins',sans-serif; font-size:1.1rem; font-weight:700; color:var(--saffron); cursor:pointer; margin-bottom:12px; }
+.bank-row { display:flex; justify-content:space-between; align-items:center; padding:10px 0; border-bottom:1px dashed rgba(0,0,0,.08); font-size:.92rem; }
+.bank-row:last-child { border-bottom:none; }
+.bank-label { color:var(--text-light); font-family:'Poppins',sans-serif; font-size:.78rem; font-weight:600; text-transform:uppercase; letter-spacing:.05em; }
+.bank-value { font-weight:600; color:var(--dark); font-family:'Poppins',sans-serif; }
+.copy-btn { background:none; border:1px solid var(--saffron); color:var(--saffron); border-radius:6px; padding:3px 10px; font-size:.72rem; cursor:pointer; font-family:'Poppins',sans-serif; font-weight:600; transition:.2s; }
+.copy-btn:hover { background:var(--saffron); color:#fff; }
+.whatsapp-btn { display:inline-flex; align-items:center; gap:10px; background:#25D366; color:#fff; padding:14px 28px; border-radius:50px; font-family:'Poppins',sans-serif; font-weight:600; font-size:.9rem; text-decoration:none; margin-top:16px; transition:.2s; }
+.whatsapp-btn:hover { background:#1DA851; transform:translateY(-2px); }
+.note-box { background:linear-gradient(135deg,#FFF3E0,#FFF8F0); border-left:4px solid var(--saffron); border-radius:0 12px 12px 0; padding:16px 20px; margin-top:24px; font-size:.92rem; color:var(--text); text-align:left; }
+@media(max-width:768px){ .donate-grid{ grid-template-columns:1fr; } }
+{% endblock %}
+{% block content %}
+<div class="page-hero">
+  <div style="font-family:'Poppins',sans-serif;font-size:.75rem;letter-spacing:.2em;color:var(--saffron-light);text-transform:uppercase;margin-bottom:10px;">Support Us</div>
+  <h1>Donate for the Festival</h1>
+  <p>Your contribution helps make our celebrations grand and memorable</p>
+</div>
+
+<section>
+  {% if donation %}
+  <div class="donate-grid">
+
+    <!-- UPI Payment -->
+    <div class="donate-card">
+      <h3>🙏 UPI Payment</h3>
+      {% if donation.qr_code_image %}
+      <img src="{{ url_for('static', filename=donation.qr_code_image) }}" alt="UPI QR Code" class="qr-image">
+      {% else %}
+      <div style="width:200px;height:200px;background:var(--saffron-pale);border-radius:12px;display:flex;align-items:center;justify-content:center;margin:0 auto 16px;font-size:3rem;">📱</div>
+      {% endif %}
+
+      <p style="font-family:'Poppins',sans-serif;font-size:.8rem;color:var(--text-light);margin-bottom:12px;">Scan QR Code లేదా UPI ID కి pay చేయండి</p>
+
+      {% if donation.upi_id %}
+      <div class="upi-id-box" onclick="copyText('{{ donation.upi_id }}', this)" title="Click to copy">
+        {{ donation.upi_id }}
+        <div style="font-size:.65rem;font-weight:400;color:var(--text-light);margin-top:4px;">👆 Click to Copy</div>
+      </div>
+      {% if donation.upi_name %}
+      <p style="font-family:'Poppins',sans-serif;font-size:.82rem;color:var(--text-light);">Name: <strong>{{ donation.upi_name }}</strong></p>
+      {% endif %}
+      {% endif %}
+
+      {% if donation.whatsapp_number %}
+      <a href="https://wa.me/{{ donation.whatsapp_number }}?text=Hello%2C%20I%20want%20to%20donate%20for%20Vinayaka%20Chavithi%20celebrations%20🙏" target="_blank" class="whatsapp-btn">
+        <i class="fab fa-whatsapp" style="font-size:1.2rem;"></i> Donate via WhatsApp
+      </a>
+      {% endif %}
+    </div>
+
+    <!-- Bank Details -->
+    <div class="donate-card">
+      <h3>🏦 Bank Transfer</h3>
+      <p style="font-family:'Poppins',sans-serif;font-size:.82rem;color:var(--text-light);margin-bottom:20px;">NEFT / IMPS / Bank Transfer కి ఈ details use చేయండి</p>
+
+      {% if donation.bank_account_name %}
+      <div class="bank-row">
+        <span class="bank-label">Account Name</span>
+        <div style="display:flex;align-items:center;gap:8px;">
+          <span class="bank-value">{{ donation.bank_account_name }}</span>
+          <button class="copy-btn" onclick="copyText('{{ donation.bank_account_name }}', this)">Copy</button>
+        </div>
+      </div>
+      {% endif %}
+
+      {% if donation.bank_account_number %}
+      <div class="bank-row">
+        <span class="bank-label">Account Number</span>
+        <div style="display:flex;align-items:center;gap:8px;">
+          <span class="bank-value">{{ donation.bank_account_number }}</span>
+          <button class="copy-btn" onclick="copyText('{{ donation.bank_account_number }}', this)">Copy</button>
+        </div>
+      </div>
+      {% endif %}
+
+      {% if donation.bank_ifsc %}
+      <div class="bank-row">
+        <span class="bank-label">IFSC Code</span>
+        <div style="display:flex;align-items:center;gap:8px;">
+          <span class="bank-value">{{ donation.bank_ifsc }}</span>
+          <button class="copy-btn" onclick="copyText('{{ donation.bank_ifsc }}', this)">Copy</button>
+        </div>
+      </div>
+      {% endif %}
+
+      {% if donation.bank_name %}
+      <div class="bank-row">
+        <span class="bank-label">Bank Name</span>
+        <span class="bank-value">{{ donation.bank_name }}</span>
+      </div>
+      {% endif %}
+
+      {% if donation.bank_branch %}
+      <div class="bank-row">
+        <span class="bank-label">Branch</span>
+        <span class="bank-value">{{ donation.bank_branch }}</span>
+      </div>
+      {% endif %}
+    </div>
+
+  </div>
+
+  {% if donation.donation_note %}
+  <div style="max-width:1000px;margin:24px auto 0;">
+    <div class="note-box">
+      <strong style="font-family:'Poppins',sans-serif;font-size:.82rem;color:var(--saffron);">📌 Note:</strong><br>
+      {{ donation.donation_note }}
+    </div>
+  </div>
+  {% endif %}
+
+  {% else %}
+  <div style="text-align:center;padding:80px 20px;color:var(--text-light);">
+    <div style="font-size:4rem;margin-bottom:16px;">🙏</div>
+    <h3 style="font-family:'Poppins',sans-serif;">Donation details coming soon!</h3>
+  </div>
+  {% endif %}
+</section>
+{% endblock %}
+
+{% block extra_scripts %}
+<script>
+function copyText(text, btn) {
+  navigator.clipboard.writeText(text).then(() => {
+    const original = btn.textContent || btn.innerHTML;
+    if (btn.classList.contains('upi-id-box')) {
+      btn.style.background = '#E8F5E9';
+      btn.style.borderColor = '#2E7D32';
+      btn.style.color = '#2E7D32';
+      setTimeout(() => {
+        btn.style.background = '';
+        btn.style.borderColor = '';
+        btn.style.color = '';
+      }, 2000);
+    } else {
+      btn.textContent = 'Copied!';
+      btn.style.background = '#2E7D32';
+      btn.style.color = '#fff';
+      setTimeout(() => {
+        btn.textContent = 'Copy';
+        btn.style.background = '';
+        btn.style.color = '';
+      }, 2000);
+    }
+  });
+}
+</script>
+{% endblock %}

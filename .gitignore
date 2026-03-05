@@ -1,0 +1,15 @@
+.env
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+.Python
+venv/
+env/
+.venv/
+instance/
+*.sqlite3
+static/images/uploads/
+*.log
+.DS_Store
+migrations/

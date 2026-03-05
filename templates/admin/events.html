@@ -1,0 +1,37 @@
+{% extends "admin/base.html" %}
+{% block title %}Events{% endblock %}
+{% block page_title %}Events{% endblock %}
+{% block content %}
+<div class="card">
+  <div class="card-header">
+    <h2><i class="fas fa-calendar-alt" style="color:var(--primary);margin-right:8px;"></i>Events</h2>
+    <a href="{{ url_for('admin_bp.add_event') }}" class="btn btn-primary"><i class="fas fa-plus"></i> Add Event</a>
+  </div>
+  <div class="table-wrap">
+    <table class="admin-table">
+      <thead><tr><th>#</th><th>Title</th><th>Date</th><th>Time</th><th>Location</th><th>Category</th><th>Status</th><th>Actions</th></tr></thead>
+      <tbody>
+        {% for e in items %}
+        <tr>
+          <td>{{ loop.index }}</td>
+          <td style="font-weight:600;">{{ e.title }}</td>
+          <td>{{ e.event_date.strftime('%d %b %Y') }}</td>
+          <td style="font-size:.78rem;color:var(--text-muted);">{{ e.event_time or '—' }}</td>
+          <td style="font-size:.78rem;color:var(--text-muted);">{{ e.location or '—' }}</td>
+          <td><span class="badge badge-info">{{ e.category|title }}</span></td>
+          <td><span class="badge badge-{% if e.is_active %}success{% else %}danger{% endif %}">{% if e.is_active %}Active{% else %}Hidden{% endif %}</span></td>
+          <td>
+            <a href="{{ url_for('admin_bp.edit_event', id=e.id) }}" class="btn btn-outline btn-sm"><i class="fas fa-edit"></i></a>
+            <form method="POST" action="{{ url_for('admin_bp.delete_event', id=e.id) }}" style="display:inline;" onsubmit="return confirm('Delete this event?')">
+              <button class="btn btn-danger btn-sm"><i class="fas fa-trash"></i></button>
+            </form>
+          </td>
+        </tr>
+        {% else %}
+        <tr><td colspan="8" style="text-align:center;color:var(--text-muted);padding:30px;">No events yet.</td></tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+</div>
+{% endblock %}

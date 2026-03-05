@@ -1,0 +1,90 @@
+{% extends "admin/base.html" %}
+{% block title %}Dashboard{% endblock %}
+{% block page_title %}Dashboard{% endblock %}
+{% block content %}
+
+<div class="stats-grid">
+  <div class="stat-card" style="border-left-color:#FF6B00;">
+    <div class="stat-icon">📢</div>
+    <div class="stat-info"><div class="num">{{ stats.announcements }}</div><div class="label">Announcements</div></div>
+  </div>
+  <div class="stat-card" style="border-left-color:#D4A017;">
+    <div class="stat-icon">📅</div>
+    <div class="stat-info"><div class="num">{{ stats.events }}</div><div class="label">Events</div></div>
+  </div>
+  <div class="stat-card" style="border-left-color:#8B1A1A;">
+    <div class="stat-icon">👥</div>
+    <div class="stat-info"><div class="num">{{ stats.committee }}</div><div class="label">Committee</div></div>
+  </div>
+  <div class="stat-card" style="border-left-color:#2E7D32;">
+    <div class="stat-icon">❤️</div>
+    <div class="stat-info"><div class="num">{{ stats.donors }}</div><div class="label">Donors</div></div>
+  </div>
+</div>
+<div class="stats-grid">
+  <div class="stat-card" style="border-left-color:#0277BD;">
+    <div class="stat-icon">🖼️</div>
+    <div class="stat-info"><div class="num">{{ stats.gallery }}</div><div class="label">Media Items</div></div>
+  </div>
+  <div class="stat-card" style="border-left-color:#E65100;">
+    <div class="stat-icon">🙌</div>
+    <div class="stat-info"><div class="num">{{ stats.volunteers }}</div><div class="label">Pending Volunteers</div></div>
+  </div>
+  <div class="stat-card" style="border-left-color:#FF6B00;">
+    <div class="stat-icon">📡</div>
+    <div class="stat-info"><div class="num">{{ stats.live_updates }}</div><div class="label">Live Updates</div></div>
+  </div>
+  <div class="stat-card" style="border-left-color:#6C757D;">
+    <div class="stat-icon">🌐</div>
+    <div class="stat-info"><div class="num"><a href="{{ url_for('public_bp.index') }}" target="_blank" style="color:var(--primary);font-size:1rem;font-weight:600;">View</a></div><div class="label">Public Website</div></div>
+  </div>
+</div>
+
+<div style="display:grid;grid-template-columns:1fr 1fr;gap:24px;">
+  <div class="card">
+    <div class="card-header">
+      <h2><i class="fas fa-bullhorn" style="color:var(--primary);margin-right:8px;"></i>Recent Announcements</h2>
+      <a href="{{ url_for('admin_bp.add_announcement') }}" class="btn btn-primary btn-sm"><i class="fas fa-plus"></i> Add</a>
+    </div>
+    {% for a in recent_announcements %}
+    <div style="padding:10px 0;border-bottom:1px solid var(--border);display:flex;justify-content:space-between;align-items:center;">
+      <div>
+        <div style="font-weight:600;font-size:.85rem;">{{ a.title }}</div>
+        <div style="font-size:.72rem;color:var(--text-muted);">{{ a.created_at.strftime('%d %b %Y') }}</div>
+      </div>
+      <span class="badge badge-{% if a.priority=='urgent' %}danger{% elif a.priority=='high' %}warning{% else %}primary{% endif %}">{{ a.priority }}</span>
+    </div>
+    {% else %}
+    <p style="color:var(--text-muted);font-size:.85rem;text-align:center;padding:20px 0;">No announcements yet.</p>
+    {% endfor %}
+  </div>
+
+  <div class="card">
+    <div class="card-header">
+      <h2><i class="fas fa-hands-helping" style="color:var(--primary);margin-right:8px;"></i>Pending Volunteers</h2>
+      <a href="{{ url_for('admin_bp.volunteers') }}" class="btn btn-outline btn-sm">View All</a>
+    </div>
+    {% for v in recent_volunteers %}
+    <div style="padding:10px 0;border-bottom:1px solid var(--border);">
+      <div style="font-weight:600;font-size:.85rem;">{{ v.name }}</div>
+      <div style="font-size:.72rem;color:var(--text-muted);">{{ v.area_of_interest or 'General' }} · {{ v.phone }}</div>
+    </div>
+    {% else %}
+    <p style="color:var(--text-muted);font-size:.85rem;text-align:center;padding:20px 0;">No pending volunteers.</p>
+    {% endfor %}
+  </div>
+</div>
+
+<!-- Quick Actions -->
+<div class="card" style="margin-top:8px;">
+  <div class="card-header"><h2>⚡ Quick Actions</h2></div>
+  <div style="display:flex;flex-wrap:wrap;gap:12px;">
+    <a href="{{ url_for('admin_bp.add_announcement') }}" class="btn btn-primary"><i class="fas fa-bullhorn"></i> New Announcement</a>
+    <a href="{{ url_for('admin_bp.add_event') }}" class="btn btn-primary"><i class="fas fa-calendar-plus"></i> Add Event</a>
+    <a href="{{ url_for('admin_bp.add_committee') }}" class="btn btn-primary"><i class="fas fa-user-plus"></i> Add Member</a>
+    <a href="{{ url_for('admin_bp.add_donor') }}" class="btn btn-primary"><i class="fas fa-heart"></i> Add Donor</a>
+    <a href="{{ url_for('admin_bp.upload_media') }}" class="btn btn-primary"><i class="fas fa-upload"></i> Upload Media</a>
+    <a href="{{ url_for('admin_bp.live_updates') }}" class="btn btn-outline"><i class="fas fa-broadcast-tower"></i> Post Live Update</a>
+  </div>
+</div>
+{% endblock %}

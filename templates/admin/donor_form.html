@@ -1,0 +1,60 @@
+{% extends "admin/base.html" %}
+{% block title %}{% if item %}Edit{% else %}Add{% endif %} Donor{% endblock %}
+{% block page_title %}{% if item %}Edit{% else %}Add{% endif %} Donor{% endblock %}
+{% block content %}
+<div class="card" style="max-width:680px;">
+  <div class="card-header">
+    <h2>{% if item %}Edit Donor{% else %}Add Donor{% endif %}</h2>
+    <a href="{{ url_for('admin_bp.donors') }}" class="btn btn-secondary btn-sm"><i class="fas fa-arrow-left"></i> Back</a>
+  </div>
+  <form method="POST">
+    <div class="form-row">
+      <div class="form-group">
+        <label>Donor Name *</label>
+        <input type="text" name="name" class="form-control" value="{{ item.name if item else '' }}" required maxlength="150">
+      </div>
+      <div class="form-group">
+        <label>Donation Type *</label>
+        <input type="text" name="donation_type" class="form-control" value="{{ item.donation_type if item else '' }}" required placeholder="e.g. Idol, Food, Decoration" maxlength="100">
+      </div>
+    </div>
+    <div class="form-row">
+      <div class="form-group">
+        <label>Category</label>
+        <select name="category" class="form-control">
+          <option value="general"    {% if item and item.category=='general' %}selected{% endif %}>General</option>
+          <option value="idol"       {% if item and item.category=='idol' %}selected{% endif %}>Idol Donation</option>
+          <option value="food"       {% if item and item.category=='food' %}selected{% endif %}>Food / Prasadam</option>
+          <option value="decoration" {% if item and item.category=='decoration' %}selected{% endif %}>Decoration</option>
+          <option value="gift"       {% if item and item.category=='gift' %}selected{% endif %}>Gifts</option>
+          <option value="materials"  {% if item and item.category=='materials' %}selected{% endif %}>Materials</option>
+          <option value="volunteer"  {% if item and item.category=='volunteer' %}selected{% endif %}>Volunteer Service</option>
+          <option value="other"      {% if item and item.category=='other' %}selected{% endif %}>Other</option>
+        </select>
+      </div>
+      <div class="form-group">
+        <label>Year</label>
+        <input type="number" name="year" class="form-control" value="{{ item.year if item else 2025 }}" min="2000" max="2100">
+      </div>
+    </div>
+    <div class="form-group">
+      <label>Donation Details</label>
+      <textarea name="donation_details" class="form-control" rows="3" placeholder="More details about the donation..." maxlength="500">{{ item.donation_details if item else '' }}</textarea>
+    </div>
+    <div class="form-group">
+      <label>Display Order</label>
+      <input type="number" name="display_order" class="form-control" value="{{ item.display_order if item else 99 }}" min="1" max="999">
+    </div>
+    {% if item %}
+    <div class="form-check">
+      <input type="checkbox" name="is_active" id="is_active" {% if item.is_active %}checked{% endif %}>
+      <label for="is_active" style="margin-bottom:0;">Active / Visible on website</label>
+    </div>
+    {% endif %}
+    <div style="display:flex;gap:12px;margin-top:8px;">
+      <button type="submit" class="btn btn-primary"><i class="fas fa-save"></i> Save</button>
+      <a href="{{ url_for('admin_bp.donors') }}" class="btn btn-secondary">Cancel</a>
+    </div>
+  </form>
+</div>
+{% endblock %}

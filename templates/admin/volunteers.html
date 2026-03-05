@@ -1,0 +1,50 @@
+{% extends "admin/base.html" %}
+{% block title %}Volunteers{% endblock %}
+{% block page_title %}Volunteers{% endblock %}
+{% block content %}
+<div class="card">
+  <div class="card-header">
+    <h2><i class="fas fa-hands-helping" style="color:var(--primary);margin-right:8px;"></i>Volunteers</h2>
+    <div style="display:flex;gap:8px;">
+      <a href="{{ url_for('admin_bp.volunteers') }}" class="btn btn-sm {% if not status_filter %}btn-primary{% else %}btn-outline{% endif %}">All</a>
+      <a href="{{ url_for('admin_bp.volunteers', status='pending') }}" class="btn btn-sm {% if status_filter=='pending' %}btn-primary{% else %}btn-outline{% endif %}">Pending</a>
+      <a href="{{ url_for('admin_bp.volunteers', status='approved') }}" class="btn btn-sm {% if status_filter=='approved' %}btn-primary{% else %}btn-outline{% endif %}">Approved</a>
+    </div>
+  </div>
+  <div class="table-wrap">
+    <table class="admin-table">
+      <thead><tr><th>#</th><th>Name</th><th>Phone</th><th>Email</th><th>Area</th><th>Availability</th><th>Status</th><th>Registered</th><th>Actions</th></tr></thead>
+      <tbody>
+        {% for v in items %}
+        <tr>
+          <td>{{ loop.index }}</td>
+          <td style="font-weight:600;">{{ v.name }}</td>
+          <td style="font-size:.78rem;">{{ v.phone }}</td>
+          <td style="font-size:.78rem;color:var(--text-muted);">{{ v.email or '—' }}</td>
+          <td style="font-size:.78rem;">{{ v.area_of_interest or '—' }}</td>
+          <td style="font-size:.78rem;color:var(--text-muted);">{{ v.availability or '—' }}</td>
+          <td>
+            <span class="badge badge-{% if v.status=='approved' %}success{% elif v.status=='rejected' %}danger{% else %}warning{% endif %}">{{ v.status|title }}</span>
+          </td>
+          <td style="font-size:.72rem;color:var(--text-muted);">{{ v.created_at.strftime('%d %b %Y') }}</td>
+          <td>
+            <form method="POST" action="{{ url_for('admin_bp.update_volunteer_status', id=v.id) }}" style="display:inline;">
+              <select name="status" onchange="this.form.submit()" class="form-control" style="padding:4px 8px;font-size:.75rem;width:auto;display:inline;">
+                <option value="pending"  {% if v.status=='pending' %}selected{% endif %}>Pending</option>
+                <option value="approved" {% if v.status=='approved' %}selected{% endif %}>Approve</option>
+                <option value="rejected" {% if v.status=='rejected' %}selected{% endif %}>Reject</option>
+              </select>
+            </form>
+            <form method="POST" action="{{ url_for('admin_bp.delete_volunteer', id=v.id) }}" style="display:inline;" onsubmit="return confirm('Remove volunteer?')">
+              <button class="btn btn-danger btn-sm"><i class="fas fa-trash"></i></button>
+            </form>
+          </td>
+        </tr>
+        {% else %}
+        <tr><td colspan="9" style="text-align:center;color:var(--text-muted);padding:30px;">No volunteers found.</td></tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+</div>
+{% endblock %}

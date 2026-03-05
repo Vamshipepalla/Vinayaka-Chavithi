@@ -1,0 +1,90 @@
+{% extends "public/base.html" %}
+{% block title %}Committee Members — {{ settings.site_title }}{% endblock %}
+{% block extra_styles %}
+.page-hero {
+  background: linear-gradient(160deg,#1A0A00,#3D1A00);
+  padding: 80px 5% 60px; text-align:center; color:#fff;
+}
+.page-hero h1 {
+  font-family:'Cinzel Decorative',serif;
+  font-size:clamp(1.5rem,4vw,2.8rem); color:var(--gold-light); margin-bottom:10px;
+}
+.page-hero p { color:rgba(255,255,255,.75); font-size:1.05rem; }
+.member-card {
+  background:#fff; border-radius:var(--radius);
+  overflow:hidden;
+  box-shadow:0 4px 24px var(--shadow);
+  transition:var(--transition);
+  text-align:center;
+}
+.member-card:hover { transform:translateY(-8px); box-shadow:0 16px 48px var(--shadow); }
+.member-photo {
+  width:100%; aspect-ratio:1;
+  object-fit:cover;
+  background:var(--saffron-pale);
+}
+.member-photo-placeholder {
+  width:100%; aspect-ratio:1;
+  background:linear-gradient(135deg,var(--saffron-pale),#FFE0B2);
+  display:flex; align-items:center; justify-content:center;
+  font-size:3.5rem;
+}
+.member-info { padding:20px 16px 24px; }
+.member-info h3 {
+  font-family:'Poppins',sans-serif;
+  font-size:1rem; font-weight:600;
+  color:var(--dark); margin-bottom:4px;
+}
+.member-info .role {
+  color:var(--saffron);
+  font-family:'Poppins',sans-serif;
+  font-size:.8rem; font-weight:600;
+  letter-spacing:.04em; margin-bottom:12px;
+}
+.member-contact a {
+  display:inline-flex; align-items:center; gap:6px;
+  color:var(--text-light); text-decoration:none;
+  font-family:'Poppins',sans-serif; font-size:.78rem;
+  margin: 4px 6px;
+  transition:color .2s;
+}
+.member-contact a:hover { color:var(--saffron); }
+{% endblock %}
+{% block content %}
+<div class="page-hero">
+  <div style="font-family:'Poppins',sans-serif;font-size:.75rem;letter-spacing:.2em;color:var(--saffron-light);text-transform:uppercase;margin-bottom:10px;">Meet Our Team</div>
+  <h1>Committee Members</h1>
+  <p>The dedicated individuals who make our celebrations possible</p>
+</div>
+
+<section>
+  <div style="max-width:1200px;margin:auto;">
+    {% if members %}
+    <div class="grid-4">
+      {% for m in members %}
+      <div class="member-card">
+        {% if m.photo %}
+        <img src="{{ url_for('static', filename=m.photo) }}" alt="{{ m.name }}" class="member-photo">
+        {% else %}
+        <div class="member-photo-placeholder">🙏</div>
+        {% endif %}
+        <div class="member-info">
+          <h3>{{ m.name }}</h3>
+          <div class="role">{{ m.role }}</div>
+          <div class="member-contact">
+            {% if m.phone %}<a href="tel:{{ m.phone }}"><i class="fas fa-phone"></i>{{ m.phone }}</a>{% endif %}
+            {% if m.email %}<a href="mailto:{{ m.email }}"><i class="fas fa-envelope"></i>{{ m.email }}</a>{% endif %}
+          </div>
+        </div>
+      </div>
+      {% endfor %}
+    </div>
+    {% else %}
+    <div style="text-align:center;padding:80px 20px;color:var(--text-light);">
+      <div style="font-size:4rem;margin-bottom:16px;">🙏</div>
+      <h3 style="font-family:'Poppins',sans-serif;">Committee details coming soon!</h3>
+    </div>
+    {% endif %}
+  </div>
+</section>
+{% endblock %}

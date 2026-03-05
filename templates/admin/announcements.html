@@ -1,0 +1,36 @@
+{% extends "admin/base.html" %}
+{% block title %}Announcements{% endblock %}
+{% block page_title %}Announcements{% endblock %}
+{% block content %}
+<div class="card">
+  <div class="card-header">
+    <h2><i class="fas fa-bullhorn" style="color:var(--primary);margin-right:8px;"></i>All Announcements</h2>
+    <a href="{{ url_for('admin_bp.add_announcement') }}" class="btn btn-primary"><i class="fas fa-plus"></i> Add New</a>
+  </div>
+  <div class="table-wrap">
+    <table class="admin-table">
+      <thead><tr><th>#</th><th>Title</th><th>Priority</th><th>Banner</th><th>Status</th><th>Date</th><th>Actions</th></tr></thead>
+      <tbody>
+        {% for item in items %}
+        <tr>
+          <td>{{ loop.index }}</td>
+          <td style="font-weight:500;">{{ item.title }}</td>
+          <td><span class="badge badge-{% if item.priority=='urgent' %}danger{% elif item.priority=='high' %}warning{% else %}primary{% endif %}">{{ item.priority }}</span></td>
+          <td>{% if item.is_banner %}<span class="badge badge-success">Yes</span>{% else %}—{% endif %}</td>
+          <td><span class="badge badge-{% if item.is_active %}success{% else %}danger{% endif %}">{% if item.is_active %}Active{% else %}Inactive{% endif %}</span></td>
+          <td style="color:var(--text-muted);font-size:.78rem;">{{ item.created_at.strftime('%d %b %Y') }}</td>
+          <td>
+            <a href="{{ url_for('admin_bp.edit_announcement', id=item.id) }}" class="btn btn-outline btn-sm"><i class="fas fa-edit"></i></a>
+            <form method="POST" action="{{ url_for('admin_bp.delete_announcement', id=item.id) }}" style="display:inline;" onsubmit="return confirm('Delete this announcement?')">
+              <button class="btn btn-danger btn-sm"><i class="fas fa-trash"></i></button>
+            </form>
+          </td>
+        </tr>
+        {% else %}
+        <tr><td colspan="7" style="text-align:center;color:var(--text-muted);padding:30px;">No announcements yet.</td></tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+</div>
+{% endblock %}

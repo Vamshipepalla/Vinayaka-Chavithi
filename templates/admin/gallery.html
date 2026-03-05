@@ -1,0 +1,32 @@
+{% extends "admin/base.html" %}
+{% block title %}Gallery{% endblock %}
+{% block page_title %}Media Gallery{% endblock %}
+{% block content %}
+<div class="card">
+  <div class="card-header">
+    <h2><i class="fas fa-images" style="color:var(--primary);margin-right:8px;"></i>Gallery ({{ items|length }} items)</h2>
+    <a href="{{ url_for('admin_bp.upload_media') }}" class="btn btn-primary"><i class="fas fa-upload"></i> Upload Media</a>
+  </div>
+  <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(160px,1fr));gap:16px;">
+    {% for item in items %}
+    <div style="background:var(--bg);border-radius:10px;overflow:hidden;position:relative;">
+      {% if item.media_type=='video' %}
+      <video src="{{ url_for('static', filename=item.file_path) }}" style="width:100%;aspect-ratio:1;object-fit:cover;"></video>
+      <span style="position:absolute;top:8px;left:8px;background:rgba(0,0,0,.7);color:#fff;border-radius:4px;padding:2px 6px;font-size:.65rem;">VIDEO</span>
+      {% else %}
+      <img src="{{ url_for('static', filename=item.file_path) }}" alt="" style="width:100%;aspect-ratio:1;object-fit:cover;">
+      {% endif %}
+      <div style="padding:8px;">
+        <div style="font-size:.75rem;font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">{{ item.title or 'Untitled' }}</div>
+        <div style="font-size:.65rem;color:var(--text-muted);">{{ item.album }} · {{ item.year }}</div>
+        <form method="POST" action="{{ url_for('admin_bp.delete_media', id=item.id) }}" onsubmit="return confirm('Delete this media?')" style="margin-top:6px;">
+          <button class="btn btn-danger btn-sm" style="width:100%;justify-content:center;"><i class="fas fa-trash"></i> Delete</button>
+        </form>
+      </div>
+    </div>
+    {% else %}
+    <div style="grid-column:1/-1;text-align:center;padding:40px;color:var(--text-muted);">No media uploaded yet.</div>
+    {% endfor %}
+  </div>
+</div>
+{% endblock %}

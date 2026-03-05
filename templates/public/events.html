@@ -1,0 +1,57 @@
+{% extends "public/base.html" %}
+{% block title %}Events — {{ settings.site_title }}{% endblock %}
+{% block extra_styles %}
+.page-hero { background:linear-gradient(160deg,#1A0A00,#3D1A00); padding:80px 5% 60px; text-align:center; color:#fff; }
+.page-hero h1 { font-family:'Cinzel Decorative',serif; font-size:clamp(1.5rem,4vw,2.8rem); color:var(--gold-light); margin-bottom:10px; }
+.page-hero p { color:rgba(255,255,255,.75); font-size:1.05rem; }
+.event-card { background:#fff; border-radius:var(--radius); overflow:hidden; box-shadow:0 4px 24px var(--shadow); display:flex; gap:0; transition:var(--transition); }
+.event-card:hover { transform:translateY(-4px); box-shadow:0 12px 36px var(--shadow); }
+.event-date-block { min-width:90px; background:var(--saffron); color:#fff; display:flex; flex-direction:column; align-items:center; justify-content:center; padding:20px 16px; }
+.event-date-block .day { font-family:'Cinzel Decorative',serif; font-size:2rem; line-height:1; }
+.event-date-block .month { font-family:'Poppins',sans-serif; font-size:.72rem; font-weight:600; letter-spacing:.1em; text-transform:uppercase; margin-top:4px; }
+.event-body { padding:22px 24px; flex:1; }
+.event-body h3 { font-family:'Poppins',sans-serif; font-size:1.05rem; font-weight:600; color:var(--dark); margin-bottom:8px; }
+.event-body p { font-size:.9rem; color:var(--text-light); margin-bottom:10px; }
+.event-meta-row { display:flex; gap:16px; flex-wrap:wrap; }
+.event-meta-row span { font-family:'Poppins',sans-serif; font-size:.75rem; color:var(--text-light); display:flex; align-items:center; gap:5px; }
+{% endblock %}
+{% block content %}
+<div class="page-hero">
+  <div style="font-family:'Poppins',sans-serif;font-size:.75rem;letter-spacing:.2em;color:var(--saffron-light);text-transform:uppercase;margin-bottom:10px;">Schedule</div>
+  <h1>Festival Events</h1>
+  <p>All events and programs during the celebration</p>
+</div>
+<section>
+  <div style="max-width:900px;margin:auto;">
+    {% if events %}
+    <div style="display:flex;flex-direction:column;gap:20px;">
+      {% for e in events %}
+      <div class="event-card">
+        <div class="event-date-block" style="background:{% if e.category=='puja' %}var(--saffron){% elif e.category=='cultural' %}var(--gold){% elif e.category=='procession' %}var(--deep-red){% else %}var(--saffron){% endif %}">
+          <span class="day">{{ e.event_date.strftime('%d') }}</span>
+          <span class="month">{{ e.event_date.strftime('%b %Y') }}</span>
+        </div>
+        <div class="event-body">
+          <div style="display:flex;justify-content:space-between;align-items:flex-start;flex-wrap:wrap;gap:8px;">
+            <h3>{{ e.title }}</h3>
+            <span class="badge badge-{% if e.category=='puja' %}saffron{% elif e.category=='cultural' %}gold{% else %}green{% endif %}">{{ e.category|title }}</span>
+          </div>
+          {% if e.description %}<p>{{ e.description }}</p>{% endif %}
+          <div class="event-meta-row">
+            {% if e.event_time %}<span><i class="fas fa-clock" style="color:var(--saffron)"></i>{{ e.event_time }}</span>{% endif %}
+            {% if e.location %}<span><i class="fas fa-map-marker-alt" style="color:var(--saffron)"></i>{{ e.location }}</span>{% endif %}
+            <span><i class="fas fa-calendar" style="color:var(--saffron)"></i>{{ e.event_date.strftime('%A, %d %B %Y') }}</span>
+          </div>
+        </div>
+      </div>
+      {% endfor %}
+    </div>
+    {% else %}
+    <div style="text-align:center;padding:80px 20px;color:var(--text-light);">
+      <div style="font-size:4rem;margin-bottom:16px;">📅</div>
+      <h3 style="font-family:'Poppins',sans-serif;">Events schedule coming soon!</h3>
+    </div>
+    {% endif %}
+  </div>
+</section>
+{% endblock %}

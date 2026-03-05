@@ -1,0 +1,38 @@
+{% extends "admin/base.html" %}
+{% block title %}Committee Members{% endblock %}
+{% block page_title %}Committee Members{% endblock %}
+{% block content %}
+<div class="card">
+  <div class="card-header">
+    <h2><i class="fas fa-users" style="color:var(--primary);margin-right:8px;"></i>Committee Members</h2>
+    <a href="{{ url_for('admin_bp.add_committee') }}" class="btn btn-primary"><i class="fas fa-user-plus"></i> Add Member</a>
+  </div>
+  <div class="table-wrap">
+    <table class="admin-table">
+      <thead><tr><th>#</th><th>Photo</th><th>Name</th><th>Role</th><th>Phone</th><th>Email</th><th>Order</th><th>Status</th><th>Actions</th></tr></thead>
+      <tbody>
+        {% for m in members %}
+        <tr>
+          <td>{{ loop.index }}</td>
+          <td>{% if m.photo %}<img src="{{ url_for('static', filename=m.photo) }}" alt="" style="width:36px;height:36px;border-radius:50%;object-fit:cover;">{% else %}<span style="font-size:1.5rem;">🙏</span>{% endif %}</td>
+          <td style="font-weight:600;">{{ m.name }}</td>
+          <td><span class="badge badge-primary">{{ m.role }}</span></td>
+          <td style="font-size:.78rem;color:var(--text-muted);">{{ m.phone or '—' }}</td>
+          <td style="font-size:.78rem;color:var(--text-muted);">{{ m.email or '—' }}</td>
+          <td>{{ m.display_order }}</td>
+          <td><span class="badge badge-{% if m.is_active %}success{% else %}danger{% endif %}">{% if m.is_active %}Active{% else %}Hidden{% endif %}</span></td>
+          <td>
+            <a href="{{ url_for('admin_bp.edit_committee', id=m.id) }}" class="btn btn-outline btn-sm"><i class="fas fa-edit"></i></a>
+            <form method="POST" action="{{ url_for('admin_bp.delete_committee', id=m.id) }}" style="display:inline;" onsubmit="return confirm('Remove this member?')">
+              <button class="btn btn-danger btn-sm"><i class="fas fa-trash"></i></button>
+            </form>
+          </td>
+        </tr>
+        {% else %}
+        <tr><td colspan="9" style="text-align:center;color:var(--text-muted);padding:30px;">No committee members yet.</td></tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+</div>
+{% endblock %}

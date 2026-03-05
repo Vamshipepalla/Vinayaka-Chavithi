@@ -1,0 +1,76 @@
+{% extends "public/base.html" %}
+{% block title %}Gallery — {{ settings.site_title }}{% endblock %}
+{% block extra_styles %}
+.page-hero { background:linear-gradient(160deg,#1A0A00,#3D1A00); padding:80px 5% 60px; text-align:center; color:#fff; }
+.page-hero h1 { font-family:'Cinzel Decorative',serif; font-size:clamp(1.5rem,4vw,2.8rem); color:var(--gold-light); margin-bottom:10px; }
+.page-hero p { color:rgba(255,255,255,.75); font-size:1.05rem; }
+.filter-bar { display:flex; gap:10px; flex-wrap:wrap; margin-bottom:32px; }
+.filter-bar a { padding:7px 16px; border-radius:30px; font-family:'Poppins',sans-serif; font-size:.78rem; font-weight:500; text-decoration:none; transition:var(--transition); border:1px solid var(--saffron); color:var(--saffron); }
+.filter-bar a.active, .filter-bar a:hover { background:var(--saffron); color:#fff; }
+.masonry { columns:4; column-gap:12px; }
+.masonry-item { break-inside:avoid; margin-bottom:12px; border-radius:12px; overflow:hidden; cursor:pointer; position:relative; }
+.masonry-item img, .masonry-item video { width:100%; display:block; border-radius:12px; transition:transform .4s; }
+.masonry-item:hover img { transform:scale(1.04); }
+.masonry-item .overlay { position:absolute; inset:0; background:rgba(26,10,0,.5); border-radius:12px; opacity:0; transition:.3s; display:flex; align-items:center; justify-content:center; color:#fff; font-size:1.4rem; }
+.masonry-item:hover .overlay { opacity:1; }
+@media(max-width:900px){.masonry{columns:3;}}
+@media(max-width:600px){.masonry{columns:2;}}
+{% endblock %}
+{% block content %}
+<div class="page-hero">
+  <div style="font-family:'Poppins',sans-serif;font-size:.75rem;letter-spacing:.2em;color:var(--saffron-light);text-transform:uppercase;margin-bottom:10px;">Memories</div>
+  <h1>Photo & Video Gallery</h1>
+  <p>Relive the moments of devotion and celebration</p>
+</div>
+<section>
+  <div style="max-width:1200px;margin:auto;">
+    <div class="filter-bar">
+      <a href="{{ url_for('public_bp.gallery') }}" class="{% if not current_album %}active{% endif %}">All</a>
+      {% for album in albums %}
+      <a href="{{ url_for('public_bp.gallery', album=album) }}" class="{% if current_album==album %}active{% endif %}">{{ album }}</a>
+      {% endfor %}
+    </div>
+    {% if media %}
+    <div class="masonry">
+      {% for item in media %}
+      <div class="masonry-item" onclick="openLightbox('{{ url_for('static', filename=item.file_path) }}','{{ item.title or '' }}','{{ item.media_type }}')">
+        {% if item.media_type=='video' %}
+        <video src="{{ url_for('static', filename=item.file_path) }}" muted loading="lazy"></video>
+        {% else %}
+        <img src="{{ url_for('static', filename=item.file_path) }}" alt="{{ item.title or 'Gallery' }}" loading="lazy">
+        {% endif %}
+        <div class="overlay"><i class="fas fa-{% if item.media_type=='video' %}play{% else %}expand{% endif %}"></i></div>
+      </div>
+      {% endfor %}
+    </div>
+    {% else %}
+    <div style="text-align:center;padding:80px 20px;color:var(--text-light);">
+      <div style="font-size:4rem;margin-bottom:16px;">📷</div>
+      <h3 style="font-family:'Poppins',sans-serif;">Gallery coming soon!</h3>
+    </div>
+    {% endif %}
+  </div>
+</section>
+<div id="lightbox" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,.93);z-index:9999;align-items:center;justify-content:center;flex-direction:column;padding:20px;" onclick="closeLightbox()">
+  <img id="lb-img" src="" alt="" style="max-width:90vw;max-height:78vh;border-radius:12px;display:none;">
+  <video id="lb-vid" controls style="max-width:90vw;max-height:78vh;border-radius:12px;display:none;"></video>
+  <p id="lb-cap" style="color:rgba(255,255,255,.8);margin-top:16px;font-family:'Poppins',sans-serif;font-size:.9rem;text-align:center;"></p>
+</div>
+{% endblock %}
+{% block extra_scripts %}
+<script>
+function openLightbox(src,cap,type){
+  const lb=document.getElementById('lightbox');
+  const img=document.getElementById('lb-img');
+  const vid=document.getElementById('lb-vid');
+  document.getElementById('lb-cap').textContent=cap;
+  if(type==='video'){img.style.display='none';vid.style.display='block';vid.src=src;}
+  else{vid.style.display='none';img.style.display='block';img.src=src;}
+  lb.style.display='flex';
+}
+function closeLightbox(){
+  document.getElementById('lightbox').style.display='none';
+  document.getElementById('lb-vid').pause();
+}
+</script>
+{% endblock %}

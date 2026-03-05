@@ -1,0 +1,78 @@
+{% extends "public/base.html" %}
+{% block title %}Volunteer — {{ settings.site_title }}{% endblock %}
+{% block extra_styles %}
+.page-hero { background:linear-gradient(160deg,#1A0A00,#3D1A00); padding:80px 5% 60px; text-align:center; color:#fff; }
+.page-hero h1 { font-family:'Cinzel Decorative',serif; font-size:clamp(1.5rem,4vw,2.8rem); color:var(--gold-light); margin-bottom:10px; }
+.page-hero p { color:rgba(255,255,255,.75); font-size:1.05rem; }
+.form-wrap { max-width:680px; margin:auto; background:#fff; border-radius:var(--radius); box-shadow:0 8px 40px var(--shadow); padding:40px; }
+.form-group { margin-bottom:22px; }
+.form-group label { display:block; font-family:'Poppins',sans-serif; font-size:.82rem; font-weight:600; color:var(--dark); margin-bottom:6px; }
+.form-group label .req { color:var(--saffron); }
+.form-control { width:100%; padding:12px 16px; border:1.5px solid #E0D0C0; border-radius:10px; font-family:'Crimson Pro',serif; font-size:1rem; color:var(--text); background:#FEFEFE; transition:border-color .2s,box-shadow .2s; }
+.form-control:focus { outline:none; border-color:var(--saffron); box-shadow:0 0 0 3px rgba(255,107,0,.12); }
+.form-row { display:grid; grid-template-columns:1fr 1fr; gap:20px; }
+@media(max-width:580px){.form-row{grid-template-columns:1fr;}}
+{% endblock %}
+{% block content %}
+<div class="page-hero">
+  <div style="font-family:'Poppins',sans-serif;font-size:.75rem;letter-spacing:.2em;color:var(--saffron-light);text-transform:uppercase;margin-bottom:10px;">Join Us</div>
+  <h1>Volunteer Registration</h1>
+  <p>Be part of the celebration and serve Lord Ganesha's community</p>
+</div>
+<section>
+  <div class="form-wrap">
+    <div style="text-align:center;margin-bottom:32px;">
+      <div style="font-size:3rem;margin-bottom:12px;">🙌</div>
+      <h2 style="font-family:'Cinzel Decorative',serif;font-size:1.3rem;color:var(--deep-red);">Register as a Volunteer</h2>
+      <p style="color:var(--text-light);margin-top:8px;font-size:.95rem;">Help us make this festival memorable. Fill in your details below.</p>
+    </div>
+    <form method="POST" action="{{ url_for('public_bp.volunteer') }}">
+      <input type="hidden" name="csrf_token" value="{{ csrf_token() if csrf_token is defined else '' }}">
+      <div class="form-row">
+        <div class="form-group">
+          <label>Full Name <span class="req">*</span></label>
+          <input type="text" name="name" class="form-control" placeholder="Your full name" required maxlength="150">
+        </div>
+        <div class="form-group">
+          <label>Phone Number <span class="req">*</span></label>
+          <input type="tel" name="phone" class="form-control" placeholder="10-digit mobile number" required maxlength="20">
+        </div>
+      </div>
+      <div class="form-group">
+        <label>Email Address</label>
+        <input type="email" name="email" class="form-control" placeholder="Optional — for confirmation" maxlength="120">
+      </div>
+      <div class="form-group">
+        <label>Area of Interest</label>
+        <select name="area_of_interest" class="form-control">
+          <option value="">Select an area</option>
+          <option value="Decoration">Decoration & Setup</option>
+          <option value="Food & Prasadam">Food & Prasadam</option>
+          <option value="Security & Crowd Management">Security & Crowd Management</option>
+          <option value="Cultural Programs">Cultural Programs</option>
+          <option value="Media & Photography">Media & Photography</option>
+          <option value="Cleaning & Maintenance">Cleaning & Maintenance</option>
+          <option value="General Help">General Help</option>
+        </select>
+      </div>
+      <div class="form-group">
+        <label>Availability</label>
+        <select name="availability" class="form-control">
+          <option value="">Select availability</option>
+          <option value="Full Festival (All 10 Days)">Full Festival (All 10 Days)</option>
+          <option value="Weekends Only">Weekends Only</option>
+          <option value="Evenings Only">Evenings Only</option>
+          <option value="Specific Days">Specific Days</option>
+        </select>
+      </div>
+      <div class="form-group">
+        <label>Additional Message</label>
+        <textarea name="message" class="form-control" rows="4" placeholder="Any additional information or special skills..." maxlength="1000"></textarea>
+      </div>
+      <button type="submit" class="btn btn-primary" style="width:100%;justify-content:center;padding:14px;">
+        <i class="fas fa-hands-helping"></i> Submit Registration
+      </button>
+    </form>
+  </div>
+</section>
+{% endblock %}

@@ -1,0 +1,95 @@
+{% extends "public/base.html" %}
+{% block title %}Our Donors — {{ settings.site_title }}{% endblock %}
+{% block extra_styles %}
+.page-hero { background:linear-gradient(160deg,#1A0A00,#3D1A00); padding:80px 5% 60px; text-align:center; color:#fff; }
+.page-hero h1 { font-family:'Cinzel Decorative',serif; font-size:clamp(1.5rem,4vw,2.8rem); color:var(--gold-light); margin-bottom:10px; }
+.page-hero p { color:rgba(255,255,255,.75); font-size:1.05rem; }
+.filter-bar { display:flex; gap:12px; flex-wrap:wrap; margin-bottom:40px; align-items:center; }
+.filter-bar a {
+  padding:8px 18px; border-radius:30px;
+  font-family:'Poppins',sans-serif; font-size:.8rem; font-weight:500;
+  text-decoration:none; transition:var(--transition);
+  border:1px solid var(--saffron); color:var(--saffron);
+}
+.filter-bar a.active, .filter-bar a:hover { background:var(--saffron); color:#fff; }
+.category-section { margin-bottom:48px; }
+.category-section h3 {
+  font-family:'Poppins',sans-serif; font-weight:700;
+  font-size:1rem; color:var(--dark);
+  border-left:4px solid var(--saffron);
+  padding:8px 16px; background:var(--saffron-pale);
+  border-radius:0 8px 8px 0; margin-bottom:20px;
+  text-transform:uppercase; letter-spacing:.08em;
+  display:flex; align-items:center; gap:10px;
+}
+.donors-table { width:100%; border-collapse:collapse; background:#fff; border-radius:12px; overflow:hidden; box-shadow:0 4px 20px var(--shadow); }
+.donors-table th {
+  background:var(--deep-red); color:#fff;
+  padding:14px 20px; text-align:left;
+  font-family:'Poppins',sans-serif; font-size:.78rem; font-weight:600; letter-spacing:.08em;
+}
+.donors-table td { padding:14px 20px; border-bottom:1px solid rgba(0,0,0,.06); font-size:.95rem; }
+.donors-table tr:last-child td { border-bottom:none; }
+.donors-table tr:nth-child(even) td { background:var(--saffron-pale); }
+.donors-table tr:hover td { background:#FFF0D0; }
+.donor-rank { display:inline-flex; align-items:center; justify-content:center; width:28px; height:28px; border-radius:50%; background:var(--saffron); color:#fff; font-family:'Poppins',sans-serif; font-size:.75rem; font-weight:700; }
+{% endblock %}
+{% block content %}
+<div class="page-hero">
+  <div style="font-family:'Poppins',sans-serif;font-size:.75rem;letter-spacing:.2em;color:var(--saffron-light);text-transform:uppercase;margin-bottom:10px;">Recognition</div>
+  <h1>Our Generous Donors</h1>
+  <p>Honouring those who contribute their time, items, and love to our festival</p>
+</div>
+
+<section>
+  <div style="max-width:1100px;margin:auto;">
+
+    <!-- Year filter -->
+    {% if years %}
+    <div class="filter-bar">
+      <span style="font-family:'Poppins',sans-serif;font-size:.8rem;font-weight:600;color:var(--text-light);">Year:</span>
+      {% for y in years %}
+      <a href="{{ url_for('public_bp.donors', year=y) }}" class="{% if y==current_year %}active{% endif %}">{{ y }}</a>
+      {% endfor %}
+    </div>
+    {% endif %}
+
+    {% if grouped %}
+      {% set cat_icons = {'idol':'🐘','food':'🍱','decoration':'🎨','gift':'🎁','materials':'🛠️','volunteer':'🙌','general':'💛','other':'🌸'} %}
+      {% for category, donors_list in grouped.items() %}
+      <div class="category-section">
+        <h3>{{ cat_icons.get(category, '💛') }} {{ category|title }} Donations</h3>
+        <div style="overflow-x:auto;">
+          <table class="donors-table">
+            <thead>
+              <tr>
+                <th width="50">#</th>
+                <th>Donor Name</th>
+                <th>Donation</th>
+                <th>Details</th>
+              </tr>
+            </thead>
+            <tbody>
+              {% for d in donors_list %}
+              <tr>
+                <td><span class="donor-rank">{{ loop.index }}</span></td>
+                <td style="font-weight:600;font-family:'Poppins',sans-serif;">{{ d.name }}</td>
+                <td><span class="badge badge-saffron">{{ d.donation_type }}</span></td>
+                <td style="color:var(--text-light);">{{ d.donation_details or '—' }}</td>
+              </tr>
+              {% endfor %}
+            </tbody>
+          </table>
+        </div>
+      </div>
+      {% endfor %}
+    {% else %}
+    <div style="text-align:center;padding:80px 20px;color:var(--text-light);">
+      <div style="font-size:4rem;margin-bottom:16px;">🙏</div>
+      <h3 style="font-family:'Poppins',sans-serif;">Donor list will be updated soon!</h3>
+      <p style="margin-top:8px;">All donors will be honoured and listed here.</p>
+    </div>
+    {% endif %}
+  </div>
+</section>
+{% endblock %}

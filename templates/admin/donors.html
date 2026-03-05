@@ -1,0 +1,37 @@
+{% extends "admin/base.html" %}
+{% block title %}Donors{% endblock %}
+{% block page_title %}Donors List{% endblock %}
+{% block content %}
+<div class="card">
+  <div class="card-header">
+    <h2><i class="fas fa-heart" style="color:var(--primary);margin-right:8px;"></i>Donors</h2>
+    <a href="{{ url_for('admin_bp.add_donor') }}" class="btn btn-primary"><i class="fas fa-plus"></i> Add Donor</a>
+  </div>
+  <div class="table-wrap">
+    <table class="admin-table">
+      <thead><tr><th>#</th><th>Name</th><th>Donation Type</th><th>Category</th><th>Details</th><th>Year</th><th>Status</th><th>Actions</th></tr></thead>
+      <tbody>
+        {% for d in items %}
+        <tr>
+          <td>{{ loop.index }}</td>
+          <td style="font-weight:600;">{{ d.name }}</td>
+          <td><span class="badge badge-primary">{{ d.donation_type }}</span></td>
+          <td><span class="badge badge-info">{{ d.category|title }}</span></td>
+          <td style="font-size:.8rem;color:var(--text-muted);">{{ d.donation_details[:60] if d.donation_details else '—' }}</td>
+          <td>{{ d.year }}</td>
+          <td><span class="badge badge-{% if d.is_active %}success{% else %}danger{% endif %}">{% if d.is_active %}Active{% else %}Hidden{% endif %}</span></td>
+          <td>
+            <a href="{{ url_for('admin_bp.edit_donor', id=d.id) }}" class="btn btn-outline btn-sm"><i class="fas fa-edit"></i></a>
+            <form method="POST" action="{{ url_for('admin_bp.delete_donor', id=d.id) }}" style="display:inline;" onsubmit="return confirm('Remove this donor?')">
+              <button class="btn btn-danger btn-sm"><i class="fas fa-trash"></i></button>
+            </form>
+          </td>
+        </tr>
+        {% else %}
+        <tr><td colspan="8" style="text-align:center;color:var(--text-muted);padding:30px;">No donors added yet.</td></tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+</div>
+{% endblock %}

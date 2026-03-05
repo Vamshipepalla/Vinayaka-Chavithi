@@ -1,0 +1,67 @@
+{% extends "admin/base.html" %}
+{% block title %}Site Settings{% endblock %}
+{% block page_title %}Site Settings{% endblock %}
+{% block content %}
+<div class="card" style="max-width:780px;">
+  <div class="card-header"><h2><i class="fas fa-cog" style="color:var(--primary);margin-right:8px;"></i>Site Settings</h2></div>
+  <form method="POST">
+    <h3 style="font-size:.85rem;font-weight:700;margin-bottom:16px;color:var(--text-muted);text-transform:uppercase;letter-spacing:.08em;">General</h3>
+    <div class="form-row">
+      <div class="form-group">
+        <label>Site Title</label>
+        <input type="text" name="site_title" class="form-control" value="{{ current.site_title }}" maxlength="200">
+      </div>
+      <div class="form-group">
+        <label>Festival Year</label>
+        <input type="text" name="festival_year" class="form-control" value="{{ current.festival_year }}" maxlength="10">
+      </div>
+    </div>
+    <div class="form-group">
+      <label>Welcome Message / Tagline</label>
+      <input type="text" name="welcome_message" class="form-control" value="{{ current.welcome_message }}" maxlength="300">
+    </div>
+    <div class="form-group">
+      <label>About Festival (displayed on homepage)</label>
+      <textarea name="about_text" class="form-control" rows="5" maxlength="2000">{{ current.about_text }}</textarea>
+    </div>
+
+    <h3 style="font-size:.85rem;font-weight:700;margin:24px 0 16px;color:var(--text-muted);text-transform:uppercase;letter-spacing:.08em;">Contact Information</h3>
+    <div class="form-row">
+      <div class="form-group">
+        <label>Contact Phone</label>
+        <input type="text" name="contact_phone" class="form-control" value="{{ current.contact_phone }}" maxlength="30">
+      </div>
+      <div class="form-group">
+        <label>Contact Email</label>
+        <input type="email" name="contact_email" class="form-control" value="{{ current.contact_email }}" maxlength="120">
+      </div>
+    </div>
+    <div class="form-group">
+      <label>Contact Address</label>
+      <textarea name="contact_address" class="form-control" rows="2" maxlength="300">{{ current.contact_address }}</textarea>
+    </div>
+
+    <h3 style="font-size:.85rem;font-weight:700;margin:24px 0 16px;color:var(--text-muted);text-transform:uppercase;letter-spacing:.08em;">Social Media</h3>
+    <div class="form-row">
+      <div class="form-group">
+        <label>Facebook URL</label>
+        <input type="url" name="facebook_url" class="form-control" value="{{ current.facebook_url }}" maxlength="300">
+      </div>
+      <div class="form-group">
+        <label>YouTube URL</label>
+        <input type="url" name="youtube_url" class="form-control" value="{{ current.youtube_url }}" maxlength="300">
+      </div>
+    </div>
+    <div class="form-group">
+  <label>Instagram URL</label>
+  <input type="url" name="instagram_url" class="form-control" value="{{ current.instagram_url }}" placeholder="https://instagram.com/yourpage">
+</div>
+    <div class="form-group">
+      <label>WhatsApp Number (with country code, e.g. 919876543210)</label>
+      <input type="text" name="whatsapp_number" class="form-control" value="{{ current.whatsapp_number }}" maxlength="20">
+    </div>
+
+    <button type="submit" class="btn btn-primary"><i class="fas fa-save"></i> Save Settings</button>
+  </form>
+</div>
+{% endblock %}
