@@ -8,7 +8,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link href="https://fonts.googleapis.com/css2?family=Cinzel+Decorative:wght@400;700;900&family=Crimson+Pro:ital,wght@0,300;0,400;0,600;1,400&family=Poppins:wght@300;400;500;600&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
-  <link rel="icon" type="image/jpeg" href="{{ url_for('static', filename='images/LOGO.jpeg') }}">
+  <link rel="icon" type="image/jpeg" href="{{ url_for('static', filename='images/logo.jpeg') }}">
   <style>
     :root {
       --saffron:       #FF6B00;
@@ -120,7 +120,7 @@
 
 <nav class="navbar">
   <a href="{{ url_for('public_bp.index') }}" class="nav-brand">
-    <img src="{{ url_for('static', filename='images/LOGO.jpeg') }}" alt="Logo" style="width:45px; height:45px; border-radius:50%; object-fit:cover;">
+    <img src="{{ url_for('static', filename='images/logo.jpeg') }}" alt="Logo" style="width:45px; height:45px; border-radius:50%; object-fit:cover;">
     <span class="brand-text">
       Vinayaka Chavithi
       <small>Celebrations {{ settings.festival_year }}</small>
